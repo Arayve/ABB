@@ -1,6 +1,12 @@
 #include "abb.h"
 #include "pila.h"
 
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
+#define CANTIDAD_INICIAL_DE_NODO 0
+
 typedef struct campo{
 	char* clave;
 	void* dato;
@@ -8,8 +14,8 @@ typedef struct campo{
 
 typedef struct abb_nodo{
 	campo_t* campo;
-	abb_nodo_t* izquierdo;
-	abb_nodo_t* derecho;
+	struct abb_nodo* izquierdo;
+	struct abb_nodo* derecho;
 }abb_nodo_t;
 
 struct abb{	//VER DIAPOSITIVA DE ABB
@@ -23,34 +29,186 @@ struct abb_iter{ //VERIFICAR
 	pila_t* pila_abb;
 };
 
+campo_t* campo_crear(void){
+	
+	campo_t* campo = malloc(sizeof(campo_t));
+	if(!campo) return NULL;
+	return campo;
+}
+abb_nodo_t* abb_nodo_crear(void){
 
-/*
-typedef struct abb_hijo {
-	struct abb_hijo* izq;
-	struct abb_hijo* der;
-}abb_hijo_t;
-*/
+	abb_nodo_t* nodo = malloc(sizeof(abb_nodo_t));
+	if (!nodo) return NULL;
+	nodo->izquierdo = NULL;
+	nodo->derecho = NULL;
+    return nodo;
+}
 
-/*
-struct abb {
-	abb_hijo_t* izq;
-	abb_hijo_t* der;
-	abb_comparar_clave_t // son punteros aca 
-	abb_destruir_dato_t
-};
-*/
 abb_t* abb_crear(abb_comparar_clave_t cmp, abb_destruir_dato_t destruir_dato){
+	abb_t* abb = malloc(sizeof(abb_t));
+	if(!abb) return NULL;
 
+	abb->cmp = cmp;//ACA no estoy seguro si se debe usar operador flechita o punto
+	abb->destruir_dato = destruir_dato;
+	abb->cantidad = CANTIDAD_INICIAL_DE_NODO;
+	return abb;
+}
+
+char* _clave_copiar(const char* clave){
+	
+	char* clave_aux = malloc((strlen(clave)+1)*sizeof(char));
+	if(!clave_aux) return NULL;
+	strcpy(clave_aux, clave);
+	return clave_aux;
+}
+
+abb_nodo_t* _construir_abb_nodo(const char* clave,void* dato){
+
+	abb_nodo_t* nodo = abb_nodo_crear();
+	if(!nodo) return NULL;
+	campo_t* campo = campo_crear();
+	if(!campo){
+		free(nodo);
+		return NULL;
+	}
+	char* clave_aux = _clave_copiar(clave);
+	if(!clave_aux){
+		free(campo);
+		free(nodo);
+		return NULL;
+	}
+	campo->clave = clave_aux;
+	campo->dato = dato;
+	nodo->campo = campo;
+	return nodo;
+}
+void*  _destruir_abb_nodo(abb_nodo_t* nodo){
+	free(nodo->campo->clave);
+	void* dato = nodo->campo->dato;
+	free(nodo->campo);
+	free(nodo);
+	return dato;
+}
+
+size_t _abb_guardar(abb_nodo_t* nodo_actual,abb_nodo_t* nodo_nuevo,abb_comparar_clave_t cmp,abb_destruir_dato_t destruir_dato){
+	if(!nodo_actual){
+		nodo_actual = nodo_nuevo;//el aumento de cantidad la hago en la otra funcion
+		return 1;
+	}
+	int comparacion = cmp(nodo_actual->campo->clave,nodo_nuevo->campo->clave);
+
+	if( comparacion == 0){//Supose que si guardo algo con la misma clave borro el dato anterior
+		void* dato = _destruir_abb_nodo(nodo_actual);
+		destruir_dato(dato);
+		nodo_actual = nodo_nuevo;
+		return 0;
+	}
+	if(comparacion < 0){//si actual es menor a nuevo
+		return _abb_guardar(nodo_actual->derecho,nodo_nuevo,cmp,destruir_dato);
+	}
+	return _abb_guardar(nodo_actual->izquierdo,nodo_nuevo,cmp,destruir_dato);
 }
 
 bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
+	abb_nodo_t* nodo = _construir_abb_nodo(clave,dato);
+	if(!nodo) return false;
 
+	if(arbol->cantidad == CANTIDAD_INICIAL_DE_NODO){
+		arbol->raiz = nodo;
+		++ arbol->cantidad;
+		return true;
+	}
+	size_t cant_nodo_guardado = _abb_guardar(arbol->raiz,nodo,arbol->cmp,arbol->destruir_dato);
+	arbol->cantidad = arbol->cantidad + cant_nodo_guardado;
+	return true;
 }
 
-void *abb_borrar(abb_t *arbol, const char *clave){
+abb_nodo_t* _buscar_elemento(abb_nodo_t* nodo_actual,const char* clave,abb_comparar_clave_t cmp){
+	if(!nodo_actual) return NULL;
+	int comparacion = cmp(nodo_actual->campo->clave,clave);
+	if( comparacion == 0){
+		return nodo_actual;
+	}
+	if(comparacion < 0){
+		return _buscar_elemento(nodo_actual->derecho,clave,cmp);
+	}
+	return _buscar_elemento(nodo_actual->izquierdo,clave,cmp);
+}
+abb_nodo_t* _buscar_padre(abb_nodo_t* nodo_actual,const char* clave ,abb_comparar_clave_t cmp){
+	if(!nodo_actual) return NULL;
+	int comparacion = cmp(nodo_actual->campo->clave,clave);
+	if( comparacion == 0) return NULL;
+	
+	if(nodo_actual->izquierdo){
+		int comparacion = cmp(nodo_actual->izquierdo->campo->clave,clave);
+		if( comparacion == 0){
+			return nodo_actual;
+		}
+	}
+	if(nodo_actual->derecho){
+		int comparacion = cmp(nodo_actual->derecho->campo->clave,clave);
+		if(comparacion == 0){
+			return nodo_actual;
+		}
+	}
+	if (comparacion < 0){
+		return _buscar_padre(nodo_actual->derecho,clave,cmp);
+	}
+	return _buscar_padre(nodo_actual->izquierdo,clave,cmp);
+}
+void _swap_abb_nodo(abb_nodo_t* nodo1, abb_nodo_t* nodo2){
+	abb_nodo_t* aux = nodo1;
+	nodo1 = nodo2;
+	nodo2 = aux;
+}
+bool _abb_nodo_es_hoja(abb_nodo_t* nodo){
+	if(!nodo) return false;
+	if(!nodo->izquierdo && !nodo->derecho) return true;
+	return false;
+}
+bool _abb_nodo_tiene_un_hijo(abb_nodo_t* nodo){
+	if(!nodo) return false;
+	if(!nodo->izquierdo && nodo->derecho) return true;
+	if(nodo->izquierdo && !nodo->derecho) return true;
+	return false;
 
 }
+bool _abb_nodo_es_menor(abb_nodo_t* nodo,const char* clave,abb_comparar_clave_t cmp){
+	int comparacion = cmp(nodo->campo->clave,clave);
+	if( comparacion < 0 ) return true;
+	return false;
+}
+void* abb_borrar(abb_t *arbol, const char *clave){
+	abb_nodo_t* nodo_aux =_buscar_elemento(arbol->raiz,clave,arbol->cmp);//cambiar a un nombre mas especifico
+	if(!nodo_aux) return NULL;
+	if(_abb_nodo_es_hoja(nodo_aux)){
+		abb_nodo_t* nodo_padre = _buscar_padre(arbol->raiz,clave,arbol->cmp);
+		void* dato = _destruir_abb_nodo(nodo_aux);
+		if(!nodo_padre){// es decir nodo_aux es la raiz y ademas hoja
+			arbol->raiz = NULL;
+		}
+		if(_abb_nodo_es_menor(nodo_padre,clave,arbol->cmp)){
+			nodo_padre->derecho = NULL;
+		}
+		nodo_padre->izquierdo = NULL;
+		return dato;
+	}
+	if(_abb_nodo_tiene_un_hijo(nodo_aux)){
+		abb_nodo_t* nodo_padre = _buscar_padre(arbol->raiz,clave,arbol->cmp);
+		
+		if(_abb_nodo_es_menor(nodo_padre,clave,arbol->cmp)){
+			nodo_padre->derecho = NULL;
+		}
+		nodo_padre->izquierdo = NULL;
+		
+		_swap_abb_nodo(nodo_padre,nodo_aux);
+		void* dato = _destruir_abb_nodo(nodo_padre);
+		return dato;
+	}
+	return NULL;
 
+}
+/*
 void *abb_obtener(const abb_t *arbol, const char *clave){
 
 }
@@ -125,4 +283,4 @@ void abb_iter_in_destruir(abb_iter_t* iter){
 
 	pila_destruir(iter->pila_abb);
 	free(iter);
-}
+}*/
