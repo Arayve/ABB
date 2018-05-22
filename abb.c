@@ -1,5 +1,3 @@
-#include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 #include "abb.h"
 #include "pila.h"
@@ -218,6 +216,7 @@ bool abb_pertenece(const abb_t *arbol, const char *clave){
 
 size_t abb_cantidad(abb_t *arbol){
 
+	return arbol->cantidad;
 }
 
 void abb_destruir(abb_t *arbol){
