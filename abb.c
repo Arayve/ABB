@@ -256,13 +256,6 @@ void abb_destruir(abb_t *arbol){
 }
 
 //ITERADOR INTERNO
-/*
-void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra){
-
-
-}
-*/
-//ITERADOR EXTERNO
 
 void apilar_hijos_in_order(pila_t* pila_abb, abb_nodo_t* nodo){
 
@@ -272,6 +265,28 @@ void apilar_hijos_in_order(pila_t* pila_abb, abb_nodo_t* nodo){
 
 	apilar_hijos_in_order(pila_abb, nodo->izquierdo);
 }
+
+void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra){
+
+	pila_t* pila_abb = pila_crear();
+
+	apilar_hijos_in_order(pila_abb, arbol->raiz);
+
+	while(!pila_esta_vacia(pila_abb)){
+		abb_nodo_t* nodo_actual = pila_desapilar(pila_abb);
+
+		if(!visitar(nodo_actual->campo->clave, nodo_actual->campo->dato, extra)){
+			pila_destruir(pila_abb);
+			return;
+		}
+
+		apilar_hijos_in_order(pila_abb, nodo_actual->derecho);
+	}
+
+	pila_destruir(pila_abb);
+}
+
+//ITERADOR EXTERNO
 
 abb_iter_t *abb_iter_in_crear(const abb_t *arbol){
 
