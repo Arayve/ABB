@@ -96,7 +96,10 @@ size_t _abb_guardar(abb_nodo_t* nodo_actual,abb_nodo_t* nodo_nuevo,abb_comparar_
 
 	if( comparacion == 0){//Supose que si guardo algo con la misma clave borro el dato anterior
 		void* dato = _destruir_abb_nodo(nodo_actual);
-		destruir_dato(dato);
+		
+		if(destruir_dato){
+			destruir_dato(dato);
+		}
 		nodo_actual = nodo_nuevo;
 		return 0;
 	}
@@ -106,7 +109,7 @@ size_t _abb_guardar(abb_nodo_t* nodo_actual,abb_nodo_t* nodo_nuevo,abb_comparar_
 	return _abb_guardar(nodo_actual->izquierdo,nodo_nuevo,cmp,destruir_dato);
 }
 
-bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
+bool abb_guardar(abb_t *arbol, const char *clave, void *dato){// preguntar si destruir dato es null
 	abb_nodo_t* nodo = _construir_abb_nodo(clave,dato);
 	if(!nodo) return false;
 
@@ -175,12 +178,17 @@ bool _abb_nodo_es_menor(abb_nodo_t* nodo,const char* clave,abb_comparar_clave_t 
 	if( comparacion < 0 ) return true;
 	return false;
 }
+abb_nodo_t* _abb_nodo_ultimo_izquierdo(abb_nodo_t* nodo_actual){
+	if(!nodo_actual->izquierdo)return nodo_actual;
+	return _abb_nodo_ultimo_izquierdo(nodo_actual->izquierdo);
+}
+
 void* abb_borrar(abb_t *arbol, const char *clave){
-	abb_nodo_t* nodo_aux =_buscar_elemento(arbol->raiz,clave,arbol->cmp);//cambiar a un nombre mas especifico
-	if(!nodo_aux) return NULL;
-	if(_abb_nodo_es_hoja(nodo_aux)){
+	abb_nodo_t* nodo_act =_buscar_elemento(arbol->raiz,clave,arbol->cmp);//cambiar a un nombre mas especifico
+	if(!nodo_act) return NULL;
+	if(_abb_nodo_es_hoja(nodo_act)){
 		abb_nodo_t* nodo_padre = _buscar_padre(arbol->raiz,clave,arbol->cmp);
-		void* dato = _destruir_abb_nodo(nodo_aux);
+		void* dato = _destruir_abb_nodo(nodo_act);
 		if(!nodo_padre){// es decir nodo_aux es la raiz y ademas hoja
 			arbol->raiz = NULL;
 		}
@@ -188,30 +196,44 @@ void* abb_borrar(abb_t *arbol, const char *clave){
 			nodo_padre->derecho = NULL;
 		}
 		nodo_padre->izquierdo = NULL;
+		
+		-- arbol->cantidad;
 		return dato;
 	}
-	if(_abb_nodo_tiene_un_hijo(nodo_aux)){
-		abb_nodo_t* nodo_padre = _buscar_padre(arbol->raiz,clave,arbol->cmp);
+	if(_abb_nodo_tiene_un_hijo(nodo_act)){
+		abb_nodo_t* nodo_padre = _buscar_padre(arbol->raiz,clave,arbol->cmp);// se en este punto que minimo nodo aux tiene hijos
 		
 		if(_abb_nodo_es_menor(nodo_padre,clave,arbol->cmp)){
 			nodo_padre->derecho = NULL;
 		}
 		nodo_padre->izquierdo = NULL;
 		
-		_swap_abb_nodo(nodo_padre,nodo_aux);
+		_swap_abb_nodo(nodo_padre,nodo_act);
 		void* dato = _destruir_abb_nodo(nodo_padre);
+		
+		-- arbol->cantidad;
 		return dato;
+
 	}
-	return NULL;
-	//FALTA RESTAR CANTIDAD
+	abb_nodo_t* nodo_aux = _abb_nodo_ultimo_izquierdo(nodo_act->derecho);
+	_swap_abb_nodo(nodo_act,nodo_aux);
+	void*dato = _destruir_abb_nodo(nodo_aux);
+	
+	-- arbol->cantidad;
+	return dato;
 }
-/*
+
 void *abb_obtener(const abb_t *arbol, const char *clave){
+	abb_nodo_t* nodo = _buscar_elemento(arbol->raiz,clave,arbol->cmp);
+	if(!nodo) return NULL;
+	return nodo->campo->dato;
 
 }
 
 bool abb_pertenece(const abb_t *arbol, const char *clave){
-
+	abb_nodo_t* nodo = _buscar_elemento(arbol->raiz,clave,arbol->cmp);
+	if(!nodo) return false;
+	return true;
 }
 
 size_t abb_cantidad(abb_t *arbol){
@@ -220,9 +242,16 @@ size_t abb_cantidad(abb_t *arbol){
 }
 
 void abb_destruir(abb_t *arbol){
-
+	while(arbol->raiz){
+		void* dato = abb_borrar(arbol,arbol->raiz->campo->clave);
+		if(arbol->destruir_dato){
+			abb_destruir_dato_t destruir_dato = arbol->destruir_dato;
+			destruir_dato(dato);
+		}
+	}
+	free(arbol);
 }
-*/
+
 //ITERADOR INTERNO
 
 void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra){
