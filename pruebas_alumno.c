@@ -47,8 +47,6 @@ void prueba_abb_guardar_varios(){
 
 	printf("PRUEBA ABB GUARDAR VARIOS\n");
 
-	
-
 
 }
 

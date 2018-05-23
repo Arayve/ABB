@@ -60,6 +60,7 @@ campo_t* campo_crear(const char* clave,void* dato){
 abb_t* abb_crear(abb_comparar_clave_t cmp, abb_destruir_dato_t destruir_dato){
 	abb_t* abb = malloc(sizeof(abb_t));
 	if(!abb) return NULL;
+	abb->raiz = NULL;
 	abb->cmp = cmp;
 	abb->destruir_dato = destruir_dato;
 	abb->cantidad = CANTIDAD_INICIAL_DE_NODO;
