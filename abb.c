@@ -140,17 +140,42 @@ size_t _abb_guardar(abb_nodo_t* nodo_actual,abb_nodo_t* nodo_nuevo,abb_nodo_t* n
 	}
 	return _abb_guardar(nodo_actual->izquierdo,nodo_nuevo,nodo_actual,cmp,destruir_dato);
 }
+/* //IDEA DE _ABB_GUARDAR
+void _abb_guardar(nodo, nodo_hijo, cmp, destruir){
+
+	if(cmp(nodo->clave, clave) < 0){
+		if(nodo->izquierdo == NULL){
+			nodo->izquierdo = nodo_hijo;
+			return;
+		}
+	return _abb_guardar(nodo->izquierdo, nodo_hijo, cmp, destruir); //VERIFICAR SI ES VÁLIDO
+	}else if(cmp(nodo->clave, clave) > 0){
+		if(nodo->derecho == NULL){
+			nodo->derecho = nodo_hijo;
+			return;
+		}
+	return _abb_guardar(nodo->derecho, nodo_hijo, cmp, destruir);
+	}
+	if(destruir){
+		void* dato = nodo->dato;
+		destruir(dato);
+	}
+	nodo->dato = nodo_hijo->dato;	//faltaría free(nodo_hijo->clave) y free(nodo->hijo)
+}
+*/
+
 bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
 	abb_nodo_t* nodo = _construir_abb_nodo(clave,dato);
 	if(!nodo) return false;
 
-	if(arbol->cantidad == CANTIDAD_INICIAL_DE_NODO){
+	if(arbol->cantidad == CANTIDAD_INICIAL_DE_NODO){	//otra posibilidad arbol->raiz == NULL
 		arbol->raiz = nodo;
 		++arbol->cantidad;
 		return true;
 	}
-	size_t cant_nodo_guardado = _abb_guardar(arbol->raiz,nodo,NULL,arbol->cmp,arbol->destruir_dato);// por que paso el padre te lo explico por whasap
+	size_t cant_nodo_guardado = _abb_guardar(arbol->raiz,nodo,NULL,arbol->cmp,arbol->destruir_dato);
 	arbol->cantidad = arbol->cantidad + cant_nodo_guardado;
+	//arbol->cantidad++;
 	return true;
 }
 
@@ -193,31 +218,29 @@ abb_nodo_t* _abb_nodo_ultimo_izquierdo(abb_nodo_t* nodo_actual){
 }
 void* _abb_borrar_hoja(abb_nodo_t* nodo_act,abb_t* arbol, const char *clave,abb_nodo_t* nodo_padre_act){
 	void* dato = _destruir_abb_nodo(nodo_act);
-	if(!nodo_padre_act){// es decir nodo_acr es la raiz y ademas hoja , unico elemento
+	if(!nodo_padre_act){// es decir nodo_act es la raiz y ademas hoja , unico elemento
 		arbol->raiz = NULL;
-	}
-	else if(_clave_esta_en_la_derecha(nodo_padre_act,clave,arbol->cmp)){
+	}else if(_clave_esta_en_la_derecha(nodo_padre_act,clave,arbol->cmp)){
 		nodo_padre_act->derecho = NULL;
-	}
-	else{
+	}else{
 		nodo_padre_act->izquierdo = NULL;
-	}	
-	-- arbol->cantidad;
+	}
+
+	--arbol->cantidad;
 	return dato;
 }
 void* _abb_borrar_hijo_unico(abb_nodo_t* nodo_act,abb_t* arbol, const char *clave,abb_nodo_t* nodo_padre_act){
 	abb_nodo_t* nodo_hijo_act = _buscar_hijo(nodo_act);
 	if(!nodo_padre_act){//estoy en la raiz 
 		arbol->raiz = nodo_hijo_act;
-	}	
-	else if(_clave_esta_en_la_derecha(nodo_padre_act,clave,arbol->cmp)){// quiere decir que nodo act esta en el derecho 
+	}else if(_clave_esta_en_la_derecha(nodo_padre_act,clave,arbol->cmp)){// quiere decir que nodo act esta en el derecho 
 		nodo_padre_act->derecho = nodo_hijo_act;
-	}
-	else{
+	}else{
 		nodo_padre_act->izquierdo = nodo_hijo_act;
-	}	
+	}
+	
 	void* dato = _destruir_abb_nodo(nodo_act);
-	-- arbol->cantidad;
+	--arbol->cantidad;
 	return dato;
 }
 void* abb_borrar(abb_t *arbol, const char *clave){
