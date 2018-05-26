@@ -191,6 +191,8 @@ void* borrar_hoja(abb_nodo_t* nodo_hijo, abb_nodo_t* nodo_padre, abb_comparar_cl
 
 	if(nodo_padre == NULL){
 		arbol->raiz = NULL;
+	}else if(nodo_padre == arbol->raiz){
+		return borrar_hoja(nodo_hijo, arbol->raiz, cmp, arbol);
 	}else if(cmp(nodo_padre->campo->clave, nodo_hijo->campo->clave) < 0){
 		nodo_padre->derecho = NULL;
 	}else{
