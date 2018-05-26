@@ -103,7 +103,7 @@ void prueba_abb_guardar_varios(){
 	print_test("clave8 obtener dato9", abb_obtener(abb, clave8) == dato9);
 
 	abb_destruir(abb);
-}
+}/*
 void prueba_abb_volumen(){
 
 	printf("PRUEBA ABB VOLUMEN\n");
@@ -233,14 +233,14 @@ void prueba_abb_iter_interno(){
 
 	abb_destruir(abb);
 }
-
+*/
 void pruebas_abb_alumno(){
 	
 	prueba_abb_vacio();
 	prueba_abb_guardar_y_borrar();
 	prueba_abb_guardar_2_elementos();
-//	prueba_abb_guardar_varios();
+	prueba_abb_guardar_varios();
 //	prueba_abb_volumen();
 //	prueba_abb_iter();
-	prueba_abb_iter_interno();
+//	prueba_abb_iter_interno();
 }
