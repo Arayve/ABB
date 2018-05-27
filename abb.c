@@ -93,6 +93,7 @@ void _swap_abb_nodo(abb_nodo_t* nodo1, abb_nodo_t* nodo2){
 	nodo1->campo = nodo2->campo;
 	nodo2->campo = campo_nodo_aux;
 }
+/*Si tiene dos hijos devuelve el izquierdo*/
 abb_nodo_t* _buscar_hijo(abb_nodo_t* nodo_actual){//necesariamente debe tener un solo hijo
 	if(nodo_actual->izquierdo)  return nodo_actual->izquierdo;
 	return nodo_actual->derecho;
@@ -221,16 +222,14 @@ void* borrar_nodo_un_hijo(abb_nodo_t* nodo_padre, abb_comparar_clave_t cmp,abb_t
 		abb_nodo_t* nodo_nuevo_hijo = _buscar_hijo(nodo_hijo);
 		int ubicacion_nuevo_hijo = _ubicacion_del_hijo(nodo_hijo,nodo_nuevo_hijo);
 		if(ubicacion_nuevo_hijo == IZQUIERDO){
-			nodo_padre->izquierdo = nodo_hijo;
-			nodo_padre->derecho = NULL;
+			_swap_abb_nodo(nodo_padre,nodo_nuevo_hijo);
 		}
 		dato = borrar_nodo_un_hijo(nodo_hijo,cmp,arbol);
 	}else{
-		abb_nodo_t* nodo_nuevo_hijo = _buscar_hijo(nodo_hijo);//codigo repetido
+		abb_nodo_t* nodo_nuevo_hijo = _buscar_hijo(nodo_hijo);
 		int ubicacion_nuevo_hijo = _ubicacion_del_hijo(nodo_hijo,nodo_nuevo_hijo);
 		if(ubicacion_nuevo_hijo == IZQUIERDO){
-			nodo_padre->izquierdo = nodo_hijo;
-			nodo_padre->derecho = NULL;
+			_swap_abb_nodo(nodo_padre,nodo_nuevo_hijo);
 		}
 		dato = borrar_nodo_dos_hijos(nodo_hijo,cmp,arbol);
 	}
