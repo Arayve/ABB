@@ -84,12 +84,13 @@ void prueba_abb_guardar_3_elementos(){
 
 	print_test("Se borró clave1", abb_borrar(abb, clave1) == dato1);
 	print_test("clave no pertenece a abb", !abb_pertenece(abb, clave1));
+	print_test("abb_cantidad igual a 2", abb_cantidad(abb) == 2);
 
 	abb_destruir(abb);
 }
-void prueba_abb_guardar_varios(){
+void prueba_abb_guardar_8_elementos(){
 
-	printf("\nPRUEBA ABB GUARDAR VARIOS\n");
+	printf("\nPRUEBA ABB GUARDAR 8 ELEMENTOS\n");
 
 	abb_t* abb = abb_crear(strcmp, NULL);
 
@@ -126,9 +127,66 @@ void prueba_abb_guardar_varios(){
 	print_test("Se borró clave4", abb_borrar(abb, clave4) == dato4);
 	print_test("Se cambió clave8", abb_guardar(abb, clave8, dato9));
 	print_test("clave8 obtener dato9", abb_obtener(abb, clave8) == dato9);
+	print_test("Se borró clave5", abb_borrar(abb, clave5) == dato5);
 
 	abb_destruir(abb);
-}/*
+}
+void prueba_abb_guardar_11_elementos(){
+
+	printf("\nPRUEBA ABB GUARDAR 11 ELEMENTOS\n");
+	abb_t* abb = abb_crear(strcmp, NULL);
+
+	char* clave1 = "Ger", *dato1 = "Kroos";
+	char* clave2 = "Bra", *dato2 = "Hulk";
+	char* clave3 = "Esp", *dato3 = "Puyol";
+	char* clave4 = "Ing", *dato4 = "Kane";
+	char* clave5 = "Chi", *dato5 = "Vidal";
+	char* clave6 = "Uru", *dato6 = "Suarez", *dato6_1 = "Cavani";
+	char* clave7 = "Por", *dato7 = "Ronaldo";
+	char* clave8 = "Col", *dato8 = "Falcao";
+	char* clave9 = "Arg", *dato9 = "Messi", *dato9_1 = "Di Maria";
+	char* clave10 = "Fra", *dato10 = "Griezmann";
+	char* clave11 = "Jpn", *dato11 = "Oliver Atom";
+
+	print_test("Se creó abb", abb != NULL);
+	print_test("abb_cantidad igual a 0", abb_cantidad(abb) == 0);
+	print_test("Se guardó clave1", abb_guardar(abb, clave1, dato1));
+	print_test("abb_cantidad igual a 1", abb_cantidad(abb) == 1);
+	print_test("Se guardó clave2", abb_guardar(abb, clave2, dato2));
+	print_test("abb_cantidad igual a 2", abb_cantidad(abb) == 2);
+	print_test("Se guardó clave3", abb_guardar(abb, clave3, dato3));
+	print_test("abb_cantidad igual a 3", abb_cantidad(abb) == 3);
+	print_test("Se guardó clave4", abb_guardar(abb, clave4, dato4));
+	print_test("abb_cantidad igual a 4", abb_cantidad(abb) == 4);
+	print_test("Se guardó clave5", abb_guardar(abb, clave5, dato5));
+	print_test("abb_cantidad igual a 5", abb_cantidad(abb) == 5);
+	print_test("Se guardó clave6", abb_guardar(abb, clave6, dato6));
+	print_test("abb_cantidad igual a 6", abb_cantidad(abb) == 6);
+
+	print_test("Se guardó clave6", abb_guardar(abb, clave6, dato6_1));
+	print_test("abb_cantidad igual a 6", abb_cantidad(abb) == 6);
+	print_test("clave8 obtener dato6_1", abb_obtener(abb, clave6) == dato6_1);
+
+	print_test("Se guardó clave7", abb_guardar(abb, clave7, dato7));
+	print_test("abb_cantidad igual a 7", abb_cantidad(abb) == 7);
+	print_test("Se guardó clave8", abb_guardar(abb, clave8, dato8));
+	print_test("abb_cantidad igual a 8", abb_cantidad(abb) == 8);
+	print_test("Se guardó clave9", abb_guardar(abb, clave9, dato9));
+	print_test("abb_cantidad igual a 9", abb_cantidad(abb) == 9);
+	print_test("Se guardó clave10", abb_guardar(abb, clave10, dato10));
+	print_test("abb_cantidad igual a 10", abb_cantidad(abb) == 10);
+
+	print_test("Se borró clave6", abb_borrar(abb, clave6) == dato6_1);
+
+	print_test("Se guardó clave11", abb_guardar(abb, clave11, dato11));
+	print_test("abb_cantidad igual a 10", abb_cantidad(abb) == 10);
+	print_test("Se guardó clave9", abb_guardar(abb, clave9, dato9_1));
+	print_test("abb_cantidad igual a 10", abb_cantidad(abb) == 10);
+	print_test("No se puede obtener clave6, por que no existe ", !abb_obtener(abb, clave6));
+
+	abb_destruir(abb);
+}
+/*
 void prueba_abb_volumen(){
 
 	printf("PRUEBA ABB VOLUMEN\n");
@@ -265,7 +323,8 @@ void pruebas_abb_alumno(){
 	prueba_abb_guardar_y_borrar();
 	prueba_abb_guardar_2_elementos();
 	prueba_abb_guardar_3_elementos();
-	prueba_abb_guardar_varios();
+	prueba_abb_guardar_8_elementos();
+	prueba_abb_guardar_11_elementos();
 //	prueba_abb_volumen();
 //	prueba_abb_iter();
 //	prueba_abb_iter_interno();

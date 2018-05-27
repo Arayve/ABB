@@ -236,13 +236,12 @@ void* borrar_nodo_dos_hijos(abb_nodo_t* nodo_hijo,abb_comparar_clave_t cmp,abb_t
 	void* dato;
 	abb_nodo_t* nodo_nuevo_hijo = buscar_reemplazante(nodo_hijo->derecho);	//como tiene 2 hijos no puede ser NULL
 
-	abb_nodo_t* nodo_padre = _buscar_padre(arbol->raiz,nodo_nuevo_hijo->campo->clave, cmp);
-	int ubicacion_hijo =_ubicacion_del_hijo(nodo_padre,nodo_nuevo_hijo);
-	_swap_abb_nodo(nodo_nuevo_hijo, nodo_hijo);
-
+	abb_nodo_t* nodo_padre = _buscar_padre(nodo_hijo->derecho,nodo_nuevo_hijo->campo->clave, cmp);
 	if(!nodo_padre){
 		nodo_padre = nodo_hijo;
 	}
+	int ubicacion_hijo =_ubicacion_del_hijo(nodo_padre,nodo_nuevo_hijo);
+	_swap_abb_nodo(nodo_nuevo_hijo, nodo_hijo);
 	if(_abb_nodo_es_hoja(nodo_nuevo_hijo)){
 		dato = _borrar_hoja_invariantes_roto(nodo_nuevo_hijo, nodo_padre, ubicacion_hijo);
 	}else if(_abb_nodo_tiene_un_hijo(nodo_nuevo_hijo)){
