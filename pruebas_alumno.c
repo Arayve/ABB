@@ -274,7 +274,8 @@ void prueba_abb_volumen(){
 	unsigned long datos[TAM];
 
 	for(unsigned long i = 0; i < TAM; i++){
-		sprintf(claves[i], "%08lu", i);
+		sprintf(claves[i], "%08lu", i);//EN tercer elemento aca rompe , no se que hace esto , pero no rompe en el arbol  sino este linea sprintf
+										//134  strops.c: No existe el archivo o el directorio.
 		datos[i] = i;
 		if(!abb_guardar(abb, claves[i], &datos[i])){
 			print_test("NO se pudieron guardar todas las claves/datos", false);
@@ -285,7 +286,7 @@ void prueba_abb_volumen(){
 
 	abb_destruir(abb);
 }
-
+*/
 void prueba_abb_iter(){
 
 	abb_t* abb = abb_crear(strcmp, NULL);
@@ -393,7 +394,6 @@ void prueba_abb_iter_interno(){
 
 	abb_destruir(abb);
 }
-*/
 void pruebas_abb_alumno(){
 	
 	prueba_abb_vacio();
@@ -403,7 +403,7 @@ void pruebas_abb_alumno(){
 	prueba_abb_guardar_8_elementos();
 	prueba_abb_guardar_11_elementos();
 	prueba_abb_guardar_20_elementos();
-//	prueba_abb_volumen();
-//	prueba_abb_iter();
-//	prueba_abb_iter_interno();
+	//prueba_abb_volumen();
+	prueba_abb_iter();
+	prueba_abb_iter_interno();
 }
