@@ -88,7 +88,7 @@ void prueba_abb_guardar_3_elementos(){
 
 	abb_destruir(abb);
 }
-void prueba_abb_guardar_5_elementos(){
+void prueba_abb_guardar_5_elementos_part1(){
 	printf("\nPRUEBA ABB GUARDAR 5 ELEMENTOS\n");
 
 	abb_t* abb = abb_crear(strcmp, NULL);
@@ -106,12 +106,33 @@ void prueba_abb_guardar_5_elementos(){
 	print_test("Se guardó clave", abb_guardar(abb, clave4, dato4));
 	print_test("Se guardó clave", abb_guardar(abb, clave5, dato5));
 	print_test("Se borró clave1", abb_borrar(abb, clave1) == dato1);
-	print_test("Se borró clave1", abb_borrar(abb, clave2) == dato2);
-	print_test("Se borró clave1", abb_borrar(abb, clave3) == dato3);
-	print_test("Se borró clave1", abb_borrar(abb, clave5) == dato5);
+	print_test("Se borró clave2", abb_borrar(abb, clave2) == dato2);
+	print_test("Se borró clave3", abb_borrar(abb, clave3) == dato3);
+	print_test("Se borró clave5", abb_borrar(abb, clave5) == dato5);
 
 	abb_destruir(abb);
 
+}
+void prueba_abb_guardar_5_elementos_part2(){
+	printf("\nPRUEBA ABB GUARDAR 5 ELEMENTOS PARTE 2\n");
+
+	abb_t* abb = abb_crear(strcmp, NULL);
+	char* clave1 = "Arg", *dato1 = "Messi";
+	char* clave2 = "Bra", *dato2 = "Hulk";
+	char* clave3 = "Din", *dato3 = "Eriksen";
+	char* clave4 = "Chi", *dato4 = "Vidal";
+	char* clave5 = "Ecu", *dato5 = "Valencia";
+
+	print_test("Se guardó clave", abb_guardar(abb, clave1, dato1));
+	print_test("Se guardó clave", abb_guardar(abb, clave2, dato2));
+	print_test("Se guardó clave", abb_guardar(abb, clave3, dato3));
+	print_test("Se guardó clave", abb_guardar(abb, clave4, dato4));
+	print_test("Se guardó clave", abb_guardar(abb, clave5, dato5));
+	print_test("Se borró clave1", abb_borrar(abb, clave1) == dato1);
+	print_test("Se borró clave2", abb_borrar(abb, clave2) == dato2);
+	print_test("Se borró clave4", abb_borrar(abb, clave4) == dato4);
+
+	abb_destruir(abb);
 }
 void prueba_abb_guardar_8_elementos(){
 
@@ -425,11 +446,13 @@ void pruebas_abb_alumno(){
 	prueba_abb_guardar_y_borrar();
 	prueba_abb_guardar_2_elementos();
 	prueba_abb_guardar_3_elementos();
-	prueba_abb_guardar_5_elementos();
-	prueba_abb_guardar_8_elementos();
-	prueba_abb_guardar_11_elementos();
-	prueba_abb_guardar_20_elementos();
+	prueba_abb_guardar_5_elementos_part1();
+	prueba_abb_guardar_5_elementos_part2();
+
+	//prueba_abb_guardar_8_elementos();
+	//prueba_abb_guardar_11_elementos();
+	//prueba_abb_guardar_20_elementos();
 	//prueba_abb_volumen();
-	prueba_abb_iter();
-	prueba_abb_iter_interno();
+	//prueba_abb_iter();
+	//prueba_abb_iter_interno();
 }
