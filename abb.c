@@ -218,15 +218,20 @@ void* borrar_nodo_un_hijo(abb_nodo_t* nodo_padre, abb_comparar_clave_t cmp,abb_t
 	if(_abb_nodo_es_hoja(nodo_hijo)){
 		dato = _borrar_hoja_invariantes_roto(nodo_hijo,nodo_padre,ubicacion_hijo);
 	}else if(_abb_nodo_tiene_un_hijo(nodo_hijo)){
-		
 		abb_nodo_t* nodo_nuevo_hijo = _buscar_hijo(nodo_hijo);
 		int ubicacion_nuevo_hijo = _ubicacion_del_hijo(nodo_hijo,nodo_nuevo_hijo);
 		if(ubicacion_nuevo_hijo == IZQUIERDO){
 			nodo_padre->izquierdo = nodo_hijo;
 			nodo_padre->derecho = NULL;
-		}	
+		}
 		dato = borrar_nodo_un_hijo(nodo_hijo,cmp,arbol);
 	}else{
+		abb_nodo_t* nodo_nuevo_hijo = _buscar_hijo(nodo_hijo);//codigo repetido
+		int ubicacion_nuevo_hijo = _ubicacion_del_hijo(nodo_hijo,nodo_nuevo_hijo);
+		if(ubicacion_nuevo_hijo == IZQUIERDO){
+			nodo_padre->izquierdo = nodo_hijo;
+			nodo_padre->derecho = NULL;
+		}
 		dato = borrar_nodo_dos_hijos(nodo_hijo,cmp,arbol);
 	}
 	return dato;
@@ -250,11 +255,13 @@ void* borrar_nodo_dos_hijos(abb_nodo_t* nodo_hijo,abb_comparar_clave_t cmp,abb_t
 	}
 	int ubicacion_hijo =_ubicacion_del_hijo(nodo_padre,nodo_nuevo_hijo);
 	_swap_abb_nodo(nodo_nuevo_hijo, nodo_hijo);
+	
 	if(_abb_nodo_es_hoja(nodo_nuevo_hijo)){
 		dato = _borrar_hoja_invariantes_roto(nodo_nuevo_hijo, nodo_padre, ubicacion_hijo);
-	}else if(_abb_nodo_tiene_un_hijo(nodo_nuevo_hijo)){
+	
+	}else if(_abb_nodo_tiene_un_hijo(nodo_nuevo_hijo)){	
 		dato = borrar_nodo_un_hijo(nodo_nuevo_hijo, cmp,arbol);
-	}else{
+	}else{//tiene sentido llabar nodo_dos_hijos , digo el reemplaante nunca va tener dos hijos
 		dato = borrar_nodo_dos_hijos(nodo_nuevo_hijo, cmp,arbol);
 	}
 	return dato;

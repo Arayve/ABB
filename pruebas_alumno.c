@@ -448,11 +448,10 @@ void pruebas_abb_alumno(){
 	prueba_abb_guardar_3_elementos();
 	prueba_abb_guardar_5_elementos_part1();
 	prueba_abb_guardar_5_elementos_part2();
-
-	//prueba_abb_guardar_8_elementos();
-	//prueba_abb_guardar_11_elementos();
-	//prueba_abb_guardar_20_elementos();
+	prueba_abb_guardar_8_elementos();
+	prueba_abb_guardar_11_elementos();
+	prueba_abb_guardar_20_elementos();
 	//prueba_abb_volumen();
-	//prueba_abb_iter();
-	//prueba_abb_iter_interno();
+	prueba_abb_iter();
+	prueba_abb_iter_interno();
 }
