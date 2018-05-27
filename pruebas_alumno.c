@@ -57,7 +57,7 @@ void prueba_abb_guardar_2_elementos(){
 	print_test("abb_cantidad igual a 1", abb_cantidad(abb) == 1);
 	print_test("clave pertenece a abb", abb_pertenece(abb, clave1));
 	print_test("Se guardó clave", abb_guardar(abb, clave2, dato2));
-	print_test("abb_cantidad igual a 1", abb_cantidad(abb) == 2);
+	print_test("abb_cantidad igual a 2", abb_cantidad(abb) == 2);
 	print_test("clave pertenece a abb", abb_pertenece(abb, clave2));
 
 	abb_destruir(abb);
