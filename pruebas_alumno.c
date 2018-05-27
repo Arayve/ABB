@@ -62,6 +62,31 @@ void prueba_abb_guardar_2_elementos(){
 
 	abb_destruir(abb);
 }
+void prueba_abb_guardar_3_elementos(){
+	printf("\nPRUEBA ABB GUARDAR 3 ELEMENTOS\n");
+
+	abb_t* abb = abb_crear(strcmp, NULL);
+	char* clave1 = "Bra", *dato1 = "Hulk";
+	char* clave2 = "Arg", *dato2 = "Messi";
+	char* clave3 = "Chi", *dato3 = "Vidal";
+
+	print_test("Se creó abb", abb != NULL);
+	print_test("abb_cantidad igual a 0", abb_cantidad(abb) == 0);
+	print_test("Se guardó clave", abb_guardar(abb, clave1, dato1));
+	print_test("abb_cantidad igual a 1", abb_cantidad(abb) == 1);
+	print_test("clave pertenece a abb", abb_pertenece(abb, clave1));
+	print_test("Se guardó clave", abb_guardar(abb, clave2, dato2));
+	print_test("abb_cantidad igual a 2", abb_cantidad(abb) == 2);
+	print_test("clave pertenece a abb", abb_pertenece(abb, clave2));
+	print_test("Se guardó clave", abb_guardar(abb, clave3, dato3));
+	print_test("abb_cantidad igual a 2", abb_cantidad(abb) == 3);
+	print_test("clave pertenece a abb", abb_pertenece(abb, clave3));
+
+	print_test("Se borró clave1", abb_borrar(abb, clave1) == dato1);
+	print_test("clave no pertenece a abb", !abb_pertenece(abb, clave1));
+
+	abb_destruir(abb);
+}
 void prueba_abb_guardar_varios(){
 
 	printf("\nPRUEBA ABB GUARDAR VARIOS\n");
@@ -239,6 +264,7 @@ void pruebas_abb_alumno(){
 	prueba_abb_vacio();
 	prueba_abb_guardar_y_borrar();
 	prueba_abb_guardar_2_elementos();
+	prueba_abb_guardar_3_elementos();
 	prueba_abb_guardar_varios();
 //	prueba_abb_volumen();
 //	prueba_abb_iter();
