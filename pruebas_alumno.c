@@ -186,6 +186,83 @@ void prueba_abb_guardar_11_elementos(){
 
 	abb_destruir(abb);
 }
+void prueba_abb_guardar_20_elementos(){
+
+	printf("\nPRUEBA ABB GUARDAR 20 ELEMENTOS\n");
+	abb_t* abb = abb_crear(strcmp, NULL);
+	
+	char* clave1 = "Nigeria", *dato1 = "Abuya";
+	char* clave2 = "Peru", *dato2 = "Lima";
+	char* clave3 = "Alemania", *dato3 = "Berlin";
+	char* clave4 = "Francia", *dato4 = "Paris";
+	char* clave5 = "España", *dato5 = "Madrid";
+	char* clave6 = "Bolivia", *dato6 = "La Paz";
+	char* clave7 = "Paraguay", *dato7 = "Asuncion";
+	char* clave8 = "Uruguay", *dato8 = "Montevideo";
+	char* clave9 = "Argentina", *dato9 = "Buenos aires";
+	char* clave10 = "Rusia", *dato10 = "Moscu";
+	char* clave11 = "Brazil", *dato11 = "Brazilia";
+	char* clave12 = "Ecuador", *dato12 = "Quito";
+	char* clave13 = "Venezuela", *dato13 = "Caracas";
+	char* clave14 = "Colombia", *dato14 = "Bogota";
+	char* clave15 = "China", *dato15 = "Pekin";
+	char* clave16 = "Israel", *dato16 = "Jerusalen";
+	char* clave17 = "Japon", *dato17 = "Tokio";
+	char* clave18 = "Salvador", *dato18 = "Salvador";
+	char* clave19 = "Ucrania", *dato19 = "Kiev";
+	char* clave20 = "Pakistan", *dato20 = "Kabul";
+
+	print_test("Se guardó clave1", abb_guardar(abb, clave1, dato1));
+	print_test("Se guardó clave2", abb_guardar(abb, clave2, dato2));
+	print_test("Se guardó clave3", abb_guardar(abb, clave3, dato3));
+	print_test("Se guardó clave4", abb_guardar(abb, clave4, dato4));
+	print_test("Se guardó clave5", abb_guardar(abb, clave5, dato5));
+	print_test("Se guardó clave6", abb_guardar(abb, clave6, dato6));
+	print_test("Se guardó clave7", abb_guardar(abb, clave7, dato7));
+	print_test("Se guardó clave8", abb_guardar(abb, clave8, dato8));
+	print_test("Se guardó clave9", abb_guardar(abb, clave9, dato9));
+	print_test("Se guardó clave10", abb_guardar(abb, clave10, dato10));
+	print_test("Se guardó clave11", abb_guardar(abb, clave11, dato11));
+	print_test("Se guardó clave12", abb_guardar(abb, clave12, dato12));
+	print_test("Se guardó clave13", abb_guardar(abb, clave13, dato13));
+	print_test("Se guardó clave14", abb_guardar(abb, clave14, dato14));
+	print_test("Se guardó clave15", abb_guardar(abb, clave15, dato15));
+	print_test("Se guardó clave16", abb_guardar(abb, clave16, dato16));
+	print_test("Se guardó clave17", abb_guardar(abb, clave17, dato17));
+	print_test("Se guardó clave18", abb_guardar(abb, clave18, dato18));
+	print_test("Se guardó clave19", abb_guardar(abb, clave19, dato19));
+	print_test("Se guardó clave20", abb_guardar(abb, clave20, dato20));
+
+
+	print_test("Se borró clave12", abb_borrar(abb, clave12) == dato12);
+	print_test("Se borró clave17", abb_borrar(abb, clave17) == dato17);
+	print_test("No se puede obtener clave12, por que no existe ", !abb_obtener(abb, clave12));
+	print_test("No se puede obtener clave17, por que no existe ", !abb_obtener(abb, clave17));
+	print_test("No  pertenece clave12", !abb_pertenece(abb,clave12));
+	print_test("No  pertenece clave17", !abb_pertenece(abb,clave17));
+	print_test("abb_cantidad igual a 18", abb_cantidad(abb) == 18);
+
+	print_test("clave1 obtener dato1", abb_obtener(abb, clave1) == dato1);
+	print_test("clave2 obtener dato2", abb_obtener(abb, clave2) == dato2);
+	print_test("clave3 obtener dato3", abb_obtener(abb, clave3) == dato3);
+	print_test("clave4 obtener dato4", abb_obtener(abb, clave4) == dato4);
+	print_test("clave5 obtener dato5", abb_obtener(abb, clave5) == dato5);
+	print_test("clave6 obtener dato6", abb_obtener(abb, clave6) == dato6);
+	print_test("clave7 obtener dato7", abb_obtener(abb, clave7) == dato7);
+	print_test("clave8 obtener dato8", abb_obtener(abb, clave8) == dato8);
+	print_test("clave9 obtener dato9", abb_obtener(abb, clave9) == dato9);
+	print_test("clave10 obtener dato10", abb_obtener(abb, clave10) == dato10);
+	print_test("clave11 obtener dato11", abb_obtener(abb, clave11) == dato11);
+	print_test("clave13 obtener dato13", abb_obtener(abb, clave13) == dato13);
+	print_test("clave14 obtener dato14", abb_obtener(abb, clave14) == dato14);
+	print_test("clave15 obtener dato15", abb_obtener(abb, clave15) == dato15);
+	print_test("clave16 obtener dato16", abb_obtener(abb, clave16) == dato16);
+	print_test("clave18 obtener dato18", abb_obtener(abb, clave18) == dato18);
+	print_test("clave19 obtener dato19", abb_obtener(abb, clave19) == dato19);
+	print_test("clave20 obtener dato20", abb_obtener(abb, clave20) == dato20);
+	
+	abb_destruir(abb);
+}
 /*
 void prueba_abb_volumen(){
 
@@ -325,6 +402,7 @@ void pruebas_abb_alumno(){
 	prueba_abb_guardar_3_elementos();
 	prueba_abb_guardar_8_elementos();
 	prueba_abb_guardar_11_elementos();
+	prueba_abb_guardar_20_elementos();
 //	prueba_abb_volumen();
 //	prueba_abb_iter();
 //	prueba_abb_iter_interno();
