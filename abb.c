@@ -202,15 +202,14 @@ void* borrar_hoja(abb_nodo_t* nodo_hijo, abb_nodo_t* nodo_padre, abb_comparar_cl
 	}
 	return _destruir_abb_nodo(nodo_hijo);
 }
-int _ubicacion_del_hijo(abb_nodo_t* padre,abb_nodo_t*hijo,abb_comparar_clave_t cmp){
-	int comparacion = cmp(padre->campo->clave,hijo->campo->clave);
-	if(comparacion < 0) return DERECHO;
+int _ubicacion_del_hijo(abb_nodo_t* padre,abb_nodo_t*hijo){
+	if(padre->derecho == hijo) return DERECHO;
 	return IZQUIERDO;
 }
 void* borrar_nodo_un_hijo(abb_nodo_t* nodo_padre, abb_comparar_clave_t cmp,abb_t* arbol){
 
 	abb_nodo_t* nodo_hijo = _buscar_hijo(nodo_padre);
-	int ubicacion_hijo = _ubicacion_del_hijo(nodo_padre,nodo_hijo,cmp);
+	int ubicacion_hijo = _ubicacion_del_hijo(nodo_padre,nodo_hijo);
 	_swap_abb_nodo(nodo_padre, nodo_hijo);
 
 	void* dato;
@@ -238,7 +237,7 @@ void* borrar_nodo_dos_hijos(abb_nodo_t* nodo_hijo,abb_comparar_clave_t cmp,abb_t
 	abb_nodo_t* nodo_nuevo_hijo = buscar_reemplazante(nodo_hijo->derecho);	//como tiene 2 hijos no puede ser NULL
 
 	abb_nodo_t* nodo_padre = _buscar_padre(arbol->raiz,nodo_nuevo_hijo->campo->clave, cmp);
-	int ubicacion_hijo =_ubicacion_del_hijo(nodo_padre,nodo_nuevo_hijo,cmp);
+	int ubicacion_hijo =_ubicacion_del_hijo(nodo_padre,nodo_nuevo_hijo);
 	_swap_abb_nodo(nodo_nuevo_hijo, nodo_hijo);
 
 	if(!nodo_padre){
