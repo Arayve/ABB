@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdlib.h>
 #include "abb.h"
 #include "pila.h"
 
