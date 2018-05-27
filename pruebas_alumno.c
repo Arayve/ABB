@@ -79,7 +79,7 @@ void prueba_abb_guardar_3_elementos(){
 	print_test("abb_cantidad igual a 2", abb_cantidad(abb) == 2);
 	print_test("clave pertenece a abb", abb_pertenece(abb, clave2));
 	print_test("Se guardó clave", abb_guardar(abb, clave3, dato3));
-	print_test("abb_cantidad igual a 2", abb_cantidad(abb) == 3);
+	print_test("abb_cantidad igual a 3", abb_cantidad(abb) == 3);
 	print_test("clave pertenece a abb", abb_pertenece(abb, clave3));
 
 	print_test("Se borró clave1", abb_borrar(abb, clave1) == dato1);
@@ -471,10 +471,10 @@ void pruebas_abb_alumno(){
 	prueba_abb_guardar_5_elementos_part1();
 	prueba_abb_guardar_5_elementos_part2();
 	prueba_abb_guardar_5_elementos_part3();
-	//prueba_abb_guardar_8_elementos();
-	//prueba_abb_guardar_11_elementos();
-	//prueba_abb_guardar_20_elementos();
+	prueba_abb_guardar_8_elementos();
+	prueba_abb_guardar_11_elementos();
+	prueba_abb_guardar_20_elementos();
 	//prueba_abb_volumen();
-	//prueba_abb_iter();
-	//prueba_abb_iter_interno();
+	prueba_abb_iter();
+	prueba_abb_iter_interno();
 }
