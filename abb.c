@@ -179,8 +179,6 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato){
 	return true;
 }
 
-void* borrar_nodo_dos_hijos(abb_nodo_t* nodo_hijo,abb_comparar_clave_t cmp, abb_t* arbol);
-
 void* _borrar_hoja_invariante_roto(abb_nodo_t* nodo_hijo, abb_nodo_t* nodo_padre, int ubicacion_hijo){
 
 	if(ubicacion_hijo == IZQUIERDO){
@@ -219,21 +217,23 @@ void swap_mantener_invariante(abb_nodo_t* nodo_padre, abb_nodo_t* nodo_hijo, abb
 	}
 }
 
-void* borrar_nodo_un_hijo(abb_nodo_t* nodo_padre, abb_comparar_clave_t cmp,abb_t* arbol){
+void* borrar_nodo_un_hijo(abb_nodo_t* nodo_padre, abb_nodo_t* nodo_abuelo, abb_t* arbol){
 
 	abb_nodo_t* nodo_hijo = _buscar_hijo(nodo_padre);
-	int ubicacion_hijo = _ubicacion_del_hijo(nodo_padre,nodo_hijo);
-	_swap_abb_nodo(nodo_padre, nodo_hijo);
 
-	if(_abb_nodo_es_hoja(nodo_hijo)){
-		return _borrar_hoja_invariante_roto(nodo_hijo,nodo_padre,ubicacion_hijo);
-	}else if(_abb_nodo_tiene_un_hijo(nodo_hijo)){
-		swap_mantener_invariante(nodo_padre, nodo_hijo, cmp);
-		return borrar_nodo_un_hijo(nodo_hijo,cmp,arbol);
+	if(nodo_abuelo == NULL){
+		arbol->raiz = nodo_hijo;
+	}else{
+		int ubicacion_padre = _ubicacion_del_hijo(nodo_abuelo,nodo_padre);
+
+		if(ubicacion_padre == DERECHO){
+			nodo_abuelo->derecho = nodo_hijo;
+		}else{
+			nodo_abuelo->izquierdo = nodo_hijo;
+		}
 	}
 
-	swap_mantener_invariante(nodo_padre, nodo_hijo, cmp);
-	return borrar_nodo_dos_hijos(nodo_hijo, cmp, arbol);
+	return _destruir_abb_nodo(nodo_padre);
 }
 abb_nodo_t* buscar_reemplazante(abb_nodo_t* nodo_reemplazante){
 
@@ -246,7 +246,6 @@ abb_nodo_t* buscar_reemplazante(abb_nodo_t* nodo_reemplazante){
 void* borrar_nodo_dos_hijos(abb_nodo_t* nodo_hijo,abb_comparar_clave_t cmp,abb_t* arbol){
 
 	abb_nodo_t* nodo_nuevo_hijo = buscar_reemplazante(nodo_hijo->derecho);
-
 	abb_nodo_t* nodo_padre = _buscar_padre(nodo_hijo,nodo_nuevo_hijo->campo->clave, cmp);
 
 	if(!nodo_padre){
@@ -260,7 +259,7 @@ void* borrar_nodo_dos_hijos(abb_nodo_t* nodo_hijo,abb_comparar_clave_t cmp,abb_t
 		return _borrar_hoja_invariante_roto(nodo_nuevo_hijo, nodo_padre, ubicacion_hijo);
 	}
 
-	return borrar_nodo_un_hijo(nodo_nuevo_hijo, cmp, arbol);
+	return borrar_nodo_un_hijo(nodo_nuevo_hijo, nodo_padre, arbol);
 }
 void* abb_borrar(abb_t *arbol, const char *clave){
 
@@ -274,7 +273,7 @@ void* abb_borrar(abb_t *arbol, const char *clave){
 	if(_abb_nodo_es_hoja(nodo_hijo)){
 		dato = borrar_hoja(nodo_hijo, nodo_padre, arbol->cmp, arbol);
 	}else if(_abb_nodo_tiene_un_hijo(nodo_hijo)){
-		dato = borrar_nodo_un_hijo(nodo_hijo, arbol->cmp,arbol);
+		dato = borrar_nodo_un_hijo(nodo_hijo, nodo_padre, arbol);
 	}else{
 		dato = borrar_nodo_dos_hijos(nodo_hijo,arbol->cmp,arbol);
 	}
