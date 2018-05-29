@@ -217,6 +217,29 @@ void prueba_abb_guardar_5_elementos_part3(){
 	print_test("Se borró clave5", abb_borrar(abb, clave5) == dato5);
 
 	abb_destruir(abb);
+}
+void prueba_abb_guardar_5_elementos_part4(){
+
+	printf("\nPRUEBA ABB GUARDAR 5 ELEMENTOS PARTE 4\n");
+	abb_t* abb = abb_crear(strcmp, NULL);
+	char* clave1 = "A", *dato1 = "a";
+	char* clave2 = "B", *dato2 = "b";
+	char* clave3 = "C", *dato3 = "c";
+	char* clave4 = "D", *dato4 = "d";
+	char* clave5 = "E", *dato5 = "e";
+
+	print_test("Se guardó clave", abb_guardar(abb, clave1, dato1));
+	print_test("Se guardó clave", abb_guardar(abb, clave2, dato2));
+	print_test("Se guardó clave", abb_guardar(abb, clave5, dato5));
+	print_test("Se guardó clave", abb_guardar(abb, clave3, dato3));
+	print_test("Se guardó clave", abb_guardar(abb, clave4, dato4));
+
+	print_test("Se borró clave1", abb_borrar(abb, clave5) == dato5);
+	print_test("Se borró clave2", abb_borrar(abb, clave1) == dato1);
+	print_test("Se borró clave3", abb_borrar(abb, clave2) == dato2);
+	print_test("Se borró clave4", abb_borrar(abb, clave3) == dato3);
+
+	abb_destruir(abb);
 }	
 void prueba_abb_guardar_8_elementos(){
 
@@ -545,6 +568,7 @@ void pruebas_abb_alumno(){
 	prueba_abb_guardar_5_elementos_part1();
 	prueba_abb_guardar_5_elementos_part2();
 	prueba_abb_guardar_5_elementos_part3();
+	prueba_abb_guardar_5_elementos_part4();
 	prueba_abb_guardar_8_elementos();
 	prueba_abb_guardar_11_elementos();
 	prueba_abb_guardar_20_elementos();
