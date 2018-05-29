@@ -43,6 +43,52 @@ void prueba_abb_guardar_y_borrar(){
 
 	abb_destruir(abb);
 }
+
+void prueba_abb_guardar_y_borrar_2(){
+
+	printf("\nPRUEBA ABB GUARDAR Y BORRAR 2\n");
+
+	abb_t* abb = abb_crear(strcmp, NULL);
+
+	char* clave1 = "1", *dato1 = "Arg";
+	char* clave2 = "2", *dato2 = "Bra";
+	char* clave3 = "5", *dato3 = "Uru";
+	char* clave4 = "3", *dato4 = "Per";
+	char* clave5 = "4", *dato5 = "Col";
+
+	print_test("Se guardó clave1 (1)", abb_guardar(abb, clave1, dato1));
+	print_test("Se guardó clave2 (2)", abb_guardar(abb, clave2, dato2));
+	print_test("Se guardó clave3 (5)", abb_guardar(abb, clave3, dato3));
+	print_test("Se guardó clave4 (3)", abb_guardar(abb, clave4, dato4));
+	print_test("Se guardó clave5 (4)", abb_guardar(abb, clave5, dato5));
+
+	print_test("Se borró clave1 (1)", abb_borrar(abb, clave1) == dato1);
+	print_test("Se borró clave2 (2)", abb_borrar(abb, clave2) == dato2);
+	print_test("Se borró clave4 (3)", abb_borrar(abb, clave4) == dato4);
+	print_test("Se borró clave5 (4)", abb_borrar(abb, clave5) == dato5);
+	print_test("Se borró clave3 (5)", abb_borrar(abb, clave3) == dato3);
+
+	abb_destruir(abb);
+
+	printf("\n");
+
+	abb = abb_crear(strcmp, NULL);
+
+	print_test("Se guardó clave1 (1)", abb_guardar(abb, clave1, dato1));
+	print_test("Se guardó clave2 (2)", abb_guardar(abb, clave2, dato2));
+	print_test("Se guardó clave3 (5)", abb_guardar(abb, clave3, dato3));
+	print_test("Se guardó clave5 (4)", abb_guardar(abb, clave5, dato5));
+	print_test("Se guardó clave4 (3)", abb_guardar(abb, clave4, dato4));
+
+	print_test("Se borró clave1 (1)", abb_borrar(abb, clave1) == dato1);
+	print_test("Se borró clave2 (2)", abb_borrar(abb, clave2) == dato2);
+	print_test("Se borró clave4 (3)", abb_borrar(abb, clave4) == dato4);
+	print_test("Se borró clave5 (4)", abb_borrar(abb, clave5) == dato5);
+	print_test("Se borró clave3 (5)", abb_borrar(abb, clave3) == dato3);
+
+	abb_destruir(abb);
+}
+
 void prueba_abb_guardar_2_elementos(){
 
 	printf("\nPRUEBA ABB GUARDAR 2 ELEMENTOS\n");
@@ -79,7 +125,7 @@ void prueba_abb_guardar_3_elementos(){
 	print_test("abb_cantidad igual a 2", abb_cantidad(abb) == 2);
 	print_test("clave pertenece a abb", abb_pertenece(abb, clave2));
 	print_test("Se guardó clave", abb_guardar(abb, clave3, dato3));
-	print_test("abb_cantidad igual a 2", abb_cantidad(abb) == 3);
+	print_test("abb_cantidad igual a 3", abb_cantidad(abb) == 3);
 	print_test("clave pertenece a abb", abb_pertenece(abb, clave3));
 
 	print_test("Se borró clave1", abb_borrar(abb, clave1) == dato1);
@@ -489,16 +535,17 @@ void pruebas_abb_alumno(){
 	
 	prueba_abb_vacio();
 	prueba_abb_guardar_y_borrar();
+	prueba_abb_guardar_y_borrar_2();
 	prueba_abb_guardar_2_elementos();
 	prueba_abb_guardar_3_elementos();
 	prueba_abb_guardar_5_elementos_part1();
 	prueba_abb_guardar_5_elementos_part2();
 	prueba_abb_guardar_5_elementos_part3();
 	prueba_abb_guardar_5_elementos_part4();
-	//prueba_abb_guardar_8_elementos();
-	//prueba_abb_guardar_11_elementos();
-	//prueba_abb_guardar_20_elementos();
+	prueba_abb_guardar_8_elementos();
+	prueba_abb_guardar_11_elementos();
+	prueba_abb_guardar_20_elementos();
 	//prueba_abb_volumen();
-	//prueba_abb_iter();
-	//prueba_abb_iter_interno();
+	prueba_abb_iter();
+	prueba_abb_iter_interno();
 }
