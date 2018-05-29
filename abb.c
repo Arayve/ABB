@@ -188,11 +188,11 @@ void* _borrar_hoja_invariante_roto(abb_nodo_t* nodo_hijo, abb_nodo_t* nodo_padre
 	}
 	return _destruir_abb_nodo(nodo_hijo);
 }
-void* borrar_hoja(abb_nodo_t* nodo_hijo, abb_nodo_t* nodo_padre, abb_comparar_clave_t cmp, abb_t* arbol){
+void* borrar_hoja(abb_nodo_t* nodo_hijo, abb_nodo_t* nodo_padre, abb_t* arbol){
 
 	if(nodo_padre == NULL){
 		arbol->raiz = NULL;
-	}else if(cmp(nodo_padre->campo->clave, nodo_hijo->campo->clave) < 0){
+	}else if(arbol->cmp(nodo_padre->campo->clave, nodo_hijo->campo->clave) < 0){
 		nodo_padre->derecho = NULL;
 	}else{
 		nodo_padre->izquierdo = NULL;
@@ -243,10 +243,10 @@ abb_nodo_t* buscar_reemplazante(abb_nodo_t* nodo_reemplazante){
 
 	return buscar_reemplazante(nodo_reemplazante->izquierdo);
 }
-void* borrar_nodo_dos_hijos(abb_nodo_t* nodo_hijo,abb_comparar_clave_t cmp,abb_t* arbol){
+void* borrar_nodo_dos_hijos(abb_nodo_t* nodo_hijo, abb_t* arbol){
 
 	abb_nodo_t* nodo_nuevo_hijo = buscar_reemplazante(nodo_hijo->derecho);
-	abb_nodo_t* nodo_padre = _buscar_padre(nodo_hijo,nodo_nuevo_hijo->campo->clave, cmp);
+	abb_nodo_t* nodo_padre = _buscar_padre(nodo_hijo,nodo_nuevo_hijo->campo->clave, arbol->cmp);
 
 	if(!nodo_padre){
 		nodo_padre = nodo_hijo;
@@ -271,11 +271,11 @@ void* abb_borrar(abb_t *arbol, const char *clave){
 	void* dato;
 
 	if(_abb_nodo_es_hoja(nodo_hijo)){
-		dato = borrar_hoja(nodo_hijo, nodo_padre, arbol->cmp, arbol);
+		dato = borrar_hoja(nodo_hijo, nodo_padre, arbol);
 	}else if(_abb_nodo_tiene_un_hijo(nodo_hijo)){
 		dato = borrar_nodo_un_hijo(nodo_hijo, nodo_padre, arbol);
 	}else{
-		dato = borrar_nodo_dos_hijos(nodo_hijo,arbol->cmp,arbol);
+		dato = borrar_nodo_dos_hijos(nodo_hijo, arbol);
 	}
 	arbol->cantidad--;
 	return dato;
@@ -302,8 +302,7 @@ void abb_destruir(abb_t *arbol){
 	while(arbol->raiz){
 		void* dato = abb_borrar(arbol,arbol->raiz->campo->clave);
 		if(arbol->destruir_dato){
-			abb_destruir_dato_t destruir_dato = arbol->destruir_dato;
-			destruir_dato(dato);
+			arbol->destruir_dato(dato);
 		}
 	}
 	free(arbol);

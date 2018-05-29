@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <stddef.h> 
 
-#define TAM 5000
-
 void prueba_abb_vacio(){
 
 	printf("\nPRUEBA ABB VACIO\n");
@@ -82,6 +80,24 @@ void prueba_abb_guardar_y_borrar_2(){
 
 	print_test("Se borró clave1 (1)", abb_borrar(abb, clave1) == dato1);
 	print_test("Se borró clave2 (2)", abb_borrar(abb, clave2) == dato2);
+	print_test("Se borró clave4 (3)", abb_borrar(abb, clave4) == dato4);
+	print_test("Se borró clave5 (4)", abb_borrar(abb, clave5) == dato5);
+	print_test("Se borró clave3 (5)", abb_borrar(abb, clave3) == dato3);
+
+	abb_destruir(abb);
+
+	printf("\n");
+
+	abb = abb_crear(strcmp, NULL);
+
+	print_test("Se guardó clave2 (2)", abb_guardar(abb, clave2, dato2));
+	print_test("Se guardó clave1 (1)", abb_guardar(abb, clave1, dato1));
+	print_test("Se guardó clave3 (5)", abb_guardar(abb, clave3, dato3));
+	print_test("Se guardó clave4 (3)", abb_guardar(abb, clave4, dato4));
+	print_test("Se guardó clave5 (4)", abb_guardar(abb, clave5, dato5));
+	
+	print_test("Se borró clave2 (2)", abb_borrar(abb, clave2) == dato2);
+	print_test("Se borró clave1 (1)", abb_borrar(abb, clave1) == dato1);
 	print_test("Se borró clave4 (3)", abb_borrar(abb, clave4) == dato4);
 	print_test("Se borró clave5 (4)", abb_borrar(abb, clave5) == dato5);
 	print_test("Se borró clave3 (5)", abb_borrar(abb, clave3) == dato3);
@@ -347,7 +363,6 @@ void prueba_abb_guardar_20_elementos(){
 	print_test("Se guardó clave19", abb_guardar(abb, clave19, dato19));
 	print_test("Se guardó clave20", abb_guardar(abb, clave20, dato20));
 
-
 	print_test("Se borró clave12", abb_borrar(abb, clave12) == dato12);
 	print_test("Se borró clave17", abb_borrar(abb, clave17) == dato17);
 	print_test("No se puede obtener clave12, por que no existe ", !abb_obtener(abb, clave12));
@@ -377,30 +392,44 @@ void prueba_abb_guardar_20_elementos(){
 	
 	abb_destruir(abb);
 }
-/*
-void prueba_abb_volumen(){
 
-	printf("PRUEBA ABB VOLUMEN\n");
+void prueba_abb_dynamic(){
 
-	abb_t* abb = abb_crear(strcmp, NULL);
+	printf("\nPRUEBA ABB DYNAMIC\n");
 
-	char** claves = malloc(TAM*sizeof(char*));
-	unsigned long datos[TAM];
+	char* clave1 = "Arg";
+	char* clave2 = "Bra";
+	char* clave3 = "Din";
+	char* clave4 = "Chi";
+	char* clave5 = "Ecu";
 
-	for(unsigned long i = 0; i < TAM; i++){
-		sprintf(claves[i], "%08lu", i);//EN tercer elemento aca rompe , no se que hace esto , pero no rompe en el arbol  sino este linea sprintf
-										//134  strops.c: No existe el archivo o el directorio.
-		datos[i] = i;
-		if(!abb_guardar(abb, claves[i], &datos[i])){
-			print_test("NO se pudieron guardar todas las claves/datos", false);
-		}
-	}
+	char* dato1 = malloc(10*sizeof(char));
+	char* dato2 = malloc(10*sizeof(char));
+	char* dato3 = malloc(10*sizeof(char));
+	char* dato4 = malloc(10*sizeof(char));
+	char* dato5 = malloc(10*sizeof(char));
 
-	print_test("Se guardaron 5000 elementos", true);
+	abb_t* abb = abb_crear(strcmp, free);
+
+	print_test("Se creó abb", abb != NULL);
+
+	print_test("Se guardó clave1", abb_guardar(abb, clave1, dato1));
+	print_test("Se guardó clave2", abb_guardar(abb, clave2, dato2));
+	print_test("Se guardó clave3", abb_guardar(abb, clave3, dato3));
+	print_test("Se guardó clave4", abb_guardar(abb, clave4, dato4));
+	print_test("Se guardó clave5", abb_guardar(abb, clave5, dato5));
+
+	print_test("Cantidad es 5", abb_cantidad(abb) == 5);
+
+	print_test("clave1 obtener dato1", abb_obtener(abb, clave1) == dato1);
+	print_test("clave2 obtener dato2", abb_obtener(abb, clave2) == dato2);
+	print_test("clave3 obtener dato3", abb_obtener(abb, clave3) == dato3);
+	print_test("clave4 obtener dato4", abb_obtener(abb, clave4) == dato4);
+	print_test("clave5 obtener dato5", abb_obtener(abb, clave5) == dato5);
 
 	abb_destruir(abb);
 }
-*/
+
 void prueba_abb_iter(){
 
 	abb_t* abb = abb_crear(strcmp, NULL);
@@ -504,8 +533,6 @@ void prueba_abb_iter_interno(){
 
 	abb_in_order(abb, imprimir_claves_datos, &contador);
 
-	//AGREGAR OTROS CASOS
-
 	abb_destruir(abb);
 }
 void pruebas_abb_alumno(){
@@ -521,7 +548,7 @@ void pruebas_abb_alumno(){
 	prueba_abb_guardar_8_elementos();
 	prueba_abb_guardar_11_elementos();
 	prueba_abb_guardar_20_elementos();
-	//prueba_abb_volumen();
+	prueba_abb_dynamic();
 	prueba_abb_iter();
 	prueba_abb_iter_interno();
 }
