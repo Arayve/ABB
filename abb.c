@@ -354,10 +354,12 @@ abb_iter_t *abb_iter_in_crear(const abb_t *arbol){
 		return NULL;
 	}
 
-	pila_apilar(iter_nuevo->pila_abb, arbol->raiz);
+	if(arbol->raiz){
+		pila_apilar(iter_nuevo->pila_abb, arbol->raiz);
 
-	apilar_hijos_in_order(iter_nuevo->pila_abb, arbol->raiz->izquierdo);
-
+		apilar_hijos_in_order(iter_nuevo->pila_abb, arbol->raiz->izquierdo);
+	}
+	
 	return iter_nuevo;
 }
 

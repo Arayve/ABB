@@ -19,6 +19,14 @@ void prueba_abb_vacio(){
 	print_test("abb_pertenece devuelve false", !abb_pertenece(abb_vacio, clave));
 	print_test("abb_cantidad igual a 0", abb_cantidad(abb_vacio) == 0);
 
+	abb_iter_t* iter = abb_iter_in_crear(abb_vacio);
+
+	print_test("Se creó iter", iter != NULL);
+	print_test("Iter avanzar es false", !abb_iter_in_avanzar(iter));
+	print_test("Iter ver actual es false", !abb_iter_in_ver_actual(iter));
+	print_test("Iter está al final", abb_iter_in_al_final(iter));
+
+	abb_iter_in_destruir(iter);
 	abb_destruir(abb_vacio);
 }
 
