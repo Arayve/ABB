@@ -9,8 +9,6 @@
 #define NO_PADRE -1
 #define PADRE 1
 
-
-
 typedef struct campo{
 	char* clave;
 	void* dato;
@@ -32,7 +30,6 @@ struct abb{
 struct abb_iter{
 	pila_t* pila_abb;
 };
-
 
 char* _clave_copiar(const char* clave){
 	
@@ -323,6 +320,22 @@ void abb_destruir(abb_t *arbol){
 }
 //ITERADOR INTERNO
 
+void _abb_in_order(abb_nodo_t* nodo, bool visitar(const char *, void *, void *), void* extra){
+
+	if(!nodo) return;
+
+	_abb_in_order(nodo->izquierdo, visitar, extra);
+	if(!visitar(nodo->campo->clave, nodo->campo->dato, extra)) return;
+	_abb_in_order(nodo->derecho, visitar, extra);
+}
+
+void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra){
+
+	_abb_in_order(arbol->raiz, visitar, extra);
+}
+
+//ITERADOR EXTERNO
+
 void apilar_hijos_in_order(pila_t* pila_abb, abb_nodo_t* nodo){
 
 	if(!nodo) return;
@@ -331,28 +344,6 @@ void apilar_hijos_in_order(pila_t* pila_abb, abb_nodo_t* nodo){
 
 	apilar_hijos_in_order(pila_abb, nodo->izquierdo);
 }
-
-void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra){
-
-	pila_t* pila_abb = pila_crear();
-
-	apilar_hijos_in_order(pila_abb, arbol->raiz);
-
-	while(!pila_esta_vacia(pila_abb)){
-		abb_nodo_t* nodo_actual = pila_desapilar(pila_abb);
-
-		if(!visitar(nodo_actual->campo->clave, nodo_actual->campo->dato, extra)){
-			pila_destruir(pila_abb);
-			return;
-		}
-
-		apilar_hijos_in_order(pila_abb, nodo_actual->derecho);
-	}
-
-	pila_destruir(pila_abb);
-}
-
-//ITERADOR EXTERNO
 
 abb_iter_t *abb_iter_in_crear(const abb_t *arbol){
 

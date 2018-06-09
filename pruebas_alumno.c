@@ -27,6 +27,28 @@ char* generador_de_palabra(size_t n){
 	return clave;
 }*/
 
+#define TAM_CLAVE 20
+
+char* generador_de_claves(size_t n){
+
+	char* clave = malloc(TAM_CLAVE*sizeof(char));
+
+	if(!clave) return "random";
+
+	char* letras_minus = "abcdefghijklmnopqrstuvwxyz";
+	char* letras_mayus = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+	for(size_t i = 0; i < TAM_CLAVE; i++){
+		if(((i+n)%3) == 0){
+			clave[i] = letras_minus[rand()%26];
+		}else{
+			clave[i] = letras_mayus[rand()%26];
+		}
+	}
+
+	return clave;
+}
+
 void prueba_abb_vacio(){
 
 	printf("\nPRUEBA ABB VACIO\n");
