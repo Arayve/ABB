@@ -3,7 +3,29 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stddef.h> 
+#include <stddef.h>
+#define TAM_CLAVE 1000
+/*
+char* generador_de_palabra(size_t n){
+
+	char* clave = malloc(TAM_CLAVE*sizeof(char));
+
+	if(!clave) return "random";
+
+	char* letras_minus = "abcdefghijklmnopqrstuvwxyz";
+	char* letras_mayus = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+	for(size_t i = 0; i < TAM_CLAVE; i++){
+		int num = rand()%26;
+		if(((i+n)%3) == 0){
+			clave[i] = letras_minus[num];
+		}else{
+			clave[i] = letras_mayus[num];
+		}
+	}
+
+	return clave;
+}*/
 
 void prueba_abb_vacio(){
 
@@ -423,7 +445,18 @@ void prueba_abb_guardar_20_elementos(){
 	
 	abb_destruir(abb);
 }
-
+/*
+void prueba_abb_volumen(int max){
+	printf("\nPRUEBA ABB GUARDAR VOLUMEN\n");
+	abb_t* abb = abb_crear(strcmp,NULL);
+	for(int i = 0; i < max ;i++){
+		char* palabra = generador_de_palabra(i);
+		abb_guardar(abb,palabra,NULL);
+		free(palabra);
+	}
+	abb_destruir(abb);
+}
+*/
 void prueba_abb_dynamic(){
 
 	printf("\nPRUEBA ABB DYNAMIC\n");
@@ -580,6 +613,7 @@ void pruebas_abb_alumno(){
 	prueba_abb_guardar_8_elementos();
 	prueba_abb_guardar_11_elementos();
 	prueba_abb_guardar_20_elementos();
+	//prueba_abb_volumen(10000);
 	prueba_abb_dynamic();
 	prueba_abb_iter();
 	prueba_abb_iter_interno();
