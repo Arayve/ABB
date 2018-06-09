@@ -310,15 +310,16 @@ size_t abb_cantidad(abb_t *arbol){
 
 	return arbol->cantidad;
 }
-
 void abb_destruir(abb_t *arbol){
-	while(arbol->raiz){
-		void* dato = abb_borrar(arbol,arbol->raiz->campo->clave);
+	if(!arbol->raiz){
+		free(arbol);
+		return;
+	}	
+	void* dato = abb_borrar(arbol,arbol->raiz->campo->clave);
 		if(arbol->destruir_dato){
 			arbol->destruir_dato(dato);
 		}
-	}
-	free(arbol);
+	abb_destruir(arbol);
 }
 //ITERADOR INTERNO
 
