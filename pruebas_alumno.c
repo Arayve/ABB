@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stddef.h>
-#define TAM_CLAVE 1000
+
 /*
 char* generador_de_palabra(size_t n){
 
@@ -27,9 +27,18 @@ char* generador_de_palabra(size_t n){
 	return clave;
 }*/
 
-#define TAM_CLAVE 20
+#define TAM_CLAVE 21
 
-char* generador_de_claves(size_t n){
+bool clave_repetida(char* clave, char** claves, size_t n){
+
+	for(size_t i = 0; i < n; i++){
+		if(strcmp(clave, claves[i]) == 0) return true;
+	}
+
+	return false;
+}
+
+char* generador_de_claves(size_t n, char** claves){
 
 	char* clave = malloc(TAM_CLAVE*sizeof(char));
 
@@ -38,13 +47,20 @@ char* generador_de_claves(size_t n){
 	char* letras_minus = "abcdefghijklmnopqrstuvwxyz";
 	char* letras_mayus = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-	for(size_t i = 0; i < TAM_CLAVE; i++){
+	for(size_t i = 0; i < TAM_CLAVE-1; i++){
 		if(((i+n)%3) == 0){
 			clave[i] = letras_minus[rand()%26];
 		}else{
 			clave[i] = letras_mayus[rand()%26];
 		}
 	}
+
+	if(clave_repetida(clave, claves, n)){
+		free(clave);
+		return generador_de_claves(n, claves);
+	}
+
+	clave[TAM_CLAVE-1] = '\0';
 
 	return clave;
 }
@@ -63,14 +79,6 @@ void prueba_abb_vacio(){
 	print_test("abb_pertenece devuelve false", !abb_pertenece(abb_vacio, clave));
 	print_test("abb_cantidad igual a 0", abb_cantidad(abb_vacio) == 0);
 
-	abb_iter_t* iter = abb_iter_in_crear(abb_vacio);
-
-	print_test("Se creó iter", iter != NULL);
-	print_test("Iter avanzar es false", !abb_iter_in_avanzar(iter));
-	print_test("Iter ver actual es false", !abb_iter_in_ver_actual(iter));
-	print_test("Iter está al final", abb_iter_in_al_final(iter));
-
-	abb_iter_in_destruir(iter);
 	abb_destruir(abb_vacio);
 }
 
@@ -467,18 +475,71 @@ void prueba_abb_guardar_20_elementos(){
 	
 	abb_destruir(abb);
 }
-/*
-void prueba_abb_volumen(int max){
-	printf("\nPRUEBA ABB GUARDAR VOLUMEN\n");
-	abb_t* abb = abb_crear(strcmp,NULL);
-	for(int i = 0; i < max ;i++){
-		char* palabra = generador_de_palabra(i);
-		abb_guardar(abb,palabra,NULL);
-		free(palabra);
-	}
-	abb_destruir(abb);
+
+void liberar_claves(char** claves, const size_t max){
+
+	for(size_t i = 0; i < max; i++) free(claves[i]);
+
+	free(claves);
 }
-*/
+
+int buscar_clave(char** claves, const char* clave_buscada, size_t max){
+
+	for(int i = 0; i < max; i++){
+		if(strcmp(claves[i], clave_buscada) == 0) return i;
+	}
+
+	return -1;
+}
+
+void prueba_abb_volumen(const size_t max){
+
+	printf("\nPRUEBA ABB GUARDAR VOLUMEN\n");
+
+	abb_t* abb = abb_crear(strcmp, NULL);
+
+	char** claves = malloc(max*sizeof(char*));
+
+	if(!claves) return;
+
+	for(size_t i = 0; i < max; i++){
+		claves[i] = generador_de_claves(i, claves);
+		abb_guardar(abb, claves[i], &i);
+	}
+
+	print_test("Se guardaron (10000) elementos", abb_cantidad(abb) == max);
+
+	abb_iter_t* iter = abb_iter_in_crear(abb);
+
+	const char* clave_actual;
+	int indice = 0;
+
+	clave_actual = abb_iter_in_ver_actual(iter);
+	indice = buscar_clave(claves, clave_actual, max);
+
+	print_test("Clave actual es clave valida", indice != -1);
+	print_test("Clave actual es distinto puntero", clave_actual != claves[indice]);
+
+	print_test("Iter avanzar", abb_iter_in_avanzar(iter));
+	print_test("Iter avanzar", abb_iter_in_avanzar(iter));
+	print_test("Iter avanzar", abb_iter_in_avanzar(iter));
+
+	clave_actual = abb_iter_in_ver_actual(iter);
+	indice = buscar_clave(claves, clave_actual, max);
+
+	print_test("Clave actual es clave valida", indice != -1);
+	print_test("Clave actual es distinto puntero", clave_actual != claves[indice]);
+
+	while(!abb_iter_in_al_final(iter)) abb_iter_in_avanzar(iter);
+
+	print_test("Iter al final", abb_iter_in_al_final(iter));
+
+	abb_destruir(abb);
+	abb_iter_in_destruir(iter);
+
+	liberar_claves(claves, max);
+}
+
 void prueba_abb_dynamic(){
 
 	printf("\nPRUEBA ABB DYNAMIC\n");
@@ -514,6 +575,22 @@ void prueba_abb_dynamic(){
 	print_test("clave5 obtener dato5", abb_obtener(abb, clave5) == dato5);
 
 	abb_destruir(abb);
+}
+
+void prueba_abb_iter_vacio(){
+
+	printf("\nPRUEBA ABB ITER VACIO\n");
+
+	abb_t* abb_vacio = abb_crear(strcmp, NULL);
+	abb_iter_t* iter = abb_iter_in_crear(abb_vacio);
+
+	print_test("Se creó iter", iter != NULL);
+	print_test("Iter avanzar es false", !abb_iter_in_avanzar(iter));
+	print_test("Iter ver actual es false", !abb_iter_in_ver_actual(iter));
+	print_test("Iter está al final", abb_iter_in_al_final(iter));
+
+	abb_iter_in_destruir(iter);
+	abb_destruir(abb_vacio);
 }
 
 void prueba_abb_iter(){
@@ -635,8 +712,9 @@ void pruebas_abb_alumno(){
 	prueba_abb_guardar_8_elementos();
 	prueba_abb_guardar_11_elementos();
 	prueba_abb_guardar_20_elementos();
-	//prueba_abb_volumen(10000);
+	prueba_abb_volumen(10000);
 	prueba_abb_dynamic();
+	prueba_abb_iter_vacio();
 	prueba_abb_iter();
 	prueba_abb_iter_interno();
 }
