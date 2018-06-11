@@ -5,28 +5,6 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-/*
-char* generador_de_palabra(size_t n){
-
-	char* clave = malloc(TAM_CLAVE*sizeof(char));
-
-	if(!clave) return "random";
-
-	char* letras_minus = "abcdefghijklmnopqrstuvwxyz";
-	char* letras_mayus = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-	for(size_t i = 0; i < TAM_CLAVE; i++){
-		int num = rand()%26;
-		if(((i+n)%3) == 0){
-			clave[i] = letras_minus[num];
-		}else{
-			clave[i] = letras_mayus[num];
-		}
-	}
-
-	return clave;
-}*/
-
 #define TAM_CLAVE 21
 
 bool clave_repetida(char* clave, char** claves, size_t n){
@@ -505,6 +483,7 @@ void prueba_abb_volumen(const size_t max){
 	for(size_t i = 0; i < max; i++){
 		claves[i] = generador_de_claves(i, claves);
 		abb_guardar(abb, claves[i], &i);
+		if(!(abb_cantidad(abb) == i+1)) break;
 	}
 
 	print_test("Se guardaron (10000) elementos", abb_cantidad(abb) == max);
@@ -519,6 +498,7 @@ void prueba_abb_volumen(const size_t max){
 
 	print_test("Clave actual es clave valida", indice != -1);
 	print_test("Clave actual es distinto puntero", clave_actual != claves[indice]);
+	print_test("Clave actual pertenece", abb_pertenece(abb, clave_actual));
 
 	print_test("Iter avanzar", abb_iter_in_avanzar(iter));
 	print_test("Iter avanzar", abb_iter_in_avanzar(iter));
