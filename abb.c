@@ -124,7 +124,7 @@ abb_nodo_t* _buscar_elemento(abb_nodo_t* nodo_actual, const char* clave, abb_com
 	}
 	return _buscar_elemento(nodo_actual->izquierdo,clave, cmp, devuelvo_padre);
 }
-size_t _abb_guardar(abb_nodo_t* nodo_padre,abb_nodo_t* nodo_hijo, abb_comparar_clave_t cmp, abb_destruir_dato_t destruir_dato){
+size_t _abb_guardar(abb_nodo_t* nodo_padre, abb_nodo_t* nodo_hijo, abb_comparar_clave_t cmp, abb_destruir_dato_t destruir_dato){
 	if(cmp(nodo_padre->campo->clave, nodo_hijo->campo->clave) < 0){
 		if(nodo_padre->derecho == NULL){
 			nodo_padre->derecho = nodo_hijo;
@@ -139,7 +139,7 @@ size_t _abb_guardar(abb_nodo_t* nodo_padre,abb_nodo_t* nodo_hijo, abb_comparar_c
 		return _abb_guardar(nodo_padre->izquierdo, nodo_hijo, cmp, destruir_dato);
 	}
 	_swap_abb_nodo(nodo_padre, nodo_hijo);
-		void* dato = _destruir_abb_nodo(nodo_hijo);	
+		void* dato = _destruir_abb_nodo(nodo_hijo);
 		if(destruir_dato){
 			destruir_dato(dato);
 		}
@@ -228,11 +228,11 @@ void* borrar_nodo_dos_hijos(abb_nodo_t* nodo_hijo, abb_t* arbol){
 }
 void* abb_borrar(abb_t *arbol, const char *clave){
 
-	abb_nodo_t* nodo_hijo = _buscar_elemento(arbol->raiz, clave, arbol->cmp,NO_PADRE);
+	abb_nodo_t* nodo_hijo = _buscar_elemento(arbol->raiz, clave, arbol->cmp, NO_PADRE);
 
 	if(!nodo_hijo) return NULL;
 
-	abb_nodo_t* nodo_padre = _buscar_elemento(arbol->raiz, clave, arbol->cmp,PADRE);
+	abb_nodo_t* nodo_padre = _buscar_elemento(arbol->raiz, clave, arbol->cmp, PADRE);
 	void* dato;
 	if(_abb_nodo_es_hoja(nodo_hijo)){
 		dato = borrar_hoja(nodo_hijo, nodo_padre, arbol);
@@ -278,13 +278,15 @@ void abb_destruir(abb_t *arbol){
 }
 //ITERADOR INTERNO
 
-void _abb_in_order(abb_nodo_t* nodo, bool visitar(const char *, void *, void *), void* extra){
+bool _abb_in_order(abb_nodo_t* nodo, bool visitar(const char *, void *, void *), void* extra){
 
-	if(!nodo) return;
+	if(!nodo) return true;
 
-	_abb_in_order(nodo->izquierdo, visitar, extra);
-	if(!visitar(nodo->campo->clave, nodo->campo->dato, extra)) return;
-	_abb_in_order(nodo->derecho, visitar, extra);
+	if(!_abb_in_order(nodo->izquierdo, visitar, extra)) return false;
+	if(!visitar(nodo->campo->clave, nodo->campo->dato, extra)) return false;
+	if(!_abb_in_order(nodo->derecho, visitar, extra)) return false;
+
+	return true;
 }
 
 void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra){

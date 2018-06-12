@@ -486,7 +486,7 @@ void prueba_abb_volumen(const size_t max){
 		if(!(abb_cantidad(abb) == i+1)) break;
 	}
 
-	print_test("Se guardaron (10000) elementos", abb_cantidad(abb) == max);
+	print_test("Se guardaron (100000) elementos", abb_cantidad(abb) == max);
 
 	abb_iter_t* iter = abb_iter_in_crear(abb);
 
@@ -633,6 +633,26 @@ void prueba_abb_iter(){
 	abb_destruir(abb);
 }
 
+bool imprimir_rama_izq(const char* clave, void* dato, void* extra){
+
+	size_t* contador = extra;
+
+	printf("Selección: %s\tJugador: %s\n", clave, (char*)dato);
+
+	(*contador)++;
+
+	if((*contador) == 2) return false;
+
+	return true;
+}
+
+bool imprimir_una_clave(const char* clave, void* dato, void* extra){
+
+	printf("Selección: %s\tJugador: %s\n", clave, (char*)dato);
+
+	return false;
+}
+
 bool imprimir_claves_datos(const char* clave, void* dato, void* extra){
 
 	size_t* contador = extra;
@@ -660,6 +680,7 @@ void prueba_abb_iter_interno(){
 	char* clave6 = "Por", *dato6 = "Ronaldo";
 	char* clave7 = "Col", *dato7 = "Falcao";
 	char* clave8 = "Arg", *dato8 = "Messi";
+	char* clave9 = "Ale", *dato9 = "Neuer";
 
 	print_test("Se guardó clave1", abb_guardar(abb, clave1, dato1));
 	print_test("Se guardó clave2", abb_guardar(abb, clave2, dato2));
@@ -669,12 +690,23 @@ void prueba_abb_iter_interno(){
 	print_test("Se guardó clave6", abb_guardar(abb, clave6, dato6));
 	print_test("Se guardó clave7", abb_guardar(abb, clave7, dato7));
 	print_test("Se guardó clave8", abb_guardar(abb, clave8, dato8));
+	print_test("Se guardó clave9", abb_guardar(abb, clave9, dato9));
 	
 	printf("\nImprimir claves y datos:\n");
 
 	size_t contador = 1;
 
 	abb_in_order(abb, imprimir_claves_datos, &contador);
+
+	printf("\n");
+
+	abb_in_order(abb, imprimir_una_clave, NULL);
+
+	printf("\n");
+
+	contador = 0;
+
+	abb_in_order(abb, imprimir_rama_izq, &contador);
 
 	abb_destruir(abb);
 }
@@ -692,7 +724,7 @@ void pruebas_abb_alumno(){
 	prueba_abb_guardar_8_elementos();
 	prueba_abb_guardar_11_elementos();
 	prueba_abb_guardar_20_elementos();
-	prueba_abb_volumen(10000);
+	prueba_abb_volumen(100000);
 	prueba_abb_dynamic();
 	prueba_abb_iter_vacio();
 	prueba_abb_iter();
