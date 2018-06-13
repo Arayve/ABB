@@ -724,7 +724,7 @@ void pruebas_abb_alumno(){
 	prueba_abb_guardar_8_elementos();
 	prueba_abb_guardar_11_elementos();
 	prueba_abb_guardar_20_elementos();
-	prueba_abb_volumen(100000);
+	//prueba_abb_volumen(100000);
 	prueba_abb_dynamic();
 	prueba_abb_iter_vacio();
 	prueba_abb_iter();
