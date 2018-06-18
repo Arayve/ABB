@@ -286,7 +286,7 @@ void destruir_abb(abb_nodo_t* nodo, abb_destruir_dato_t destruir_dato){
 }
 
 void abb_destruir(abb_t* arbol){
-	destruir_abb(arbol -> raiz, arbol->destruir_dato);
+	destruir_abb(arbol->raiz, arbol->destruir_dato);
 	free(arbol);
 }
 //ITERADOR INTERNO

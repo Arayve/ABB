@@ -33,11 +33,6 @@ char* generador_de_claves(size_t n, char** claves){
 		}
 	}
 
-	if(clave_repetida(clave, claves, n)){
-		free(clave);
-		return generador_de_claves(n, claves);
-	}
-
 	clave[TAM_CLAVE-1] = '\0';
 
 	return clave;
@@ -486,7 +481,7 @@ void prueba_abb_volumen(const size_t max){
 		if(!(abb_cantidad(abb) == i+1)) break;
 	}
 
-	print_test("Se guardaron (100000) elementos", abb_cantidad(abb) == max);
+	print_test("Prueba de volumen", abb_cantidad(abb) == max);
 
 	abb_iter_t* iter = abb_iter_in_crear(abb);
 
@@ -724,7 +719,7 @@ void pruebas_abb_alumno(){
 	prueba_abb_guardar_8_elementos();
 	prueba_abb_guardar_11_elementos();
 	prueba_abb_guardar_20_elementos();
-	//prueba_abb_volumen(100000);
+	prueba_abb_volumen(300000);
 	prueba_abb_dynamic();
 	prueba_abb_iter_vacio();
 	prueba_abb_iter();
